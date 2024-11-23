@@ -188,6 +188,8 @@ void update7SEG(int index)
 			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
 			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 0);
 			break;
+	default:
+			break;
 	}
 }
 /**
@@ -357,7 +359,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int status = 0;
-int counter = 50;
+int counter = 25;
 int dotcounter = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
