@@ -192,6 +192,13 @@ void update7SEG(int index)
 			break;
 	}
 }
+void updateClockBuffer(int hour, int minute)
+{
+	led_buffer[0] = hour/10;
+	led_buffer[1] = hour%10;
+	led_buffer[2] = minute/10;
+	led_buffer[3] = minute%10;
+}
 /**
   * @brief  The application entry point.
   * @retval int
@@ -227,10 +234,29 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int hour = 15;
+  int minute = 5;
+  int second = 60;
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  second++;
+	  if(second >= 60)
+	  {
+		  second = 0;
+		  minute++;
+	  }
+	  if(minute >= 60)
+	  {
+		  minute = 0;
+		  hour++;
+	  }
+	  if(hour >= 24)
+	  {
+		  hour = 0;
+	  }
+	  updateClockBuffer(hour, minute);
+	  HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -359,7 +385,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int status = 0;
-int counter = 25;
+int counter = 50;
 int dotcounter = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -374,7 +400,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	if(counter <= 0)
 	{
-		counter = 25;
+		counter = 50;
 	}
 	switch(status)
 	{
