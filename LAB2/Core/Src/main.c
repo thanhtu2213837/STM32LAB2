@@ -374,7 +374,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	if(counter <= 0)
 	{
-		counter = 50;
+		counter = 25;
 	}
 	switch(status)
 	{
