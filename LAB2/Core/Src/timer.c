@@ -4,7 +4,7 @@
  *  Created on: Nov 29, 2024
  *      Author: ADMIN
  */
-#include "software_timer.h"
+#include "timer.h"
 int timer1_counter = 0;
 int timer1_flag = 0;
 void setTimer1(int duration){
