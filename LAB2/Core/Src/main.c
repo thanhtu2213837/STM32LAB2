@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "time.h"
+#include "timer.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -199,23 +199,7 @@ void updateClockBuffer(int hour, int minute)
 	led_buffer[2] = minute/10;
 	led_buffer[3] = minute%10;
 }
-int timer0_counter[2] = {};
-int timer0_flag[2] = {};
-int TIMER_CYCLE = 10;
-void setTimer0(int duration, int index)
-{
-	timer0_counter[index] = duration / TIMER_CYCLE;
-	timer0_flag[index] = 0;
-}
-void timer_run()
-{
-	for(int i = 0;i < 2; i++){
-			if( timer0_counter[i] > 0){
-				timer0_counter[i] --;
-			if( timer0_counter[i] == 0) timer0_flag[i] = 1;
-			}
-		}
-}
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -254,23 +238,25 @@ int main(void)
   int hour = 15;
   int minute = 5;
   int second = 60;
-  setTimer0 (1000, 0);
-  setTimer0 (250, 1);
+  setTimer1(100);
+  setTimer2(25);
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(timer0_flag[0] == 1){
+	  if(timer1_flag == 1){
 	  		  second ++;
 	  		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-	  		  setTimer0(1000, 0);
+	  		  setTimer1(100);
 	  	  }
-	  	  if(timer0_flag[1] == 1){
-	  		  if (index_led > 3){
-	  			index_led = 0;
-	  		  }
-	  		  update7SEG(index_led++);
-	  		  setTimer0(250, 1);
-	  	  }
+	  if(timer2_flag == 1)
+	  {
+		  update7SEG(index_led++);
+		  setTimer2(25);
+	  }
+	  if(index_led > 3)
+	  {
+		  index_led = 0;
+	  }
 	  if(second >= 60)
 	  {
 		  minute++;
@@ -418,7 +404,7 @@ static void MX_GPIO_Init(void)
 //int dotcounter = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	timer_run();
+	timerRun();
 }
 /* USER CODE END 4 */
 
