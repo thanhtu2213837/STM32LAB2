@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "timer.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -384,7 +384,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int status = 0;
 int counter = 50;
 int dotcounter = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -395,25 +394,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	if(counter > 0)
 	{
-		update7SEG(index_led++);
 		counter--;
+		if(counter <= 0)
+		{
+			counter = 50;
+			update7SEG(index_led++);
+		}
 	}
-	if(counter <= 0)
+	if(dotcounter > 0)
 	{
-		counter = 50;
-	}
-	switch(status)
-	{
-	case 0:
-		HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 0);
 		dotcounter--;
-		status = 1;
-		break;
-	case 1:
-		HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 1);
-		dotcounter--;
-		status = 0;
-		break;
+		if(dotcounter <= 0)
+		{
+			dotcounter = 100;
+			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+		}
 	}
 }
 /* USER CODE END 4 */
