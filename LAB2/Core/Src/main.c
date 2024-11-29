@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "time.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -199,24 +199,22 @@ void updateClockBuffer(int hour, int minute)
 	led_buffer[2] = minute/10;
 	led_buffer[3] = minute%10;
 }
-int timer0_counter = 0;
-int timer0_flag = 0;
+int timer0_counter[2] = {};
+int timer0_flag[2] = {};
 int TIMER_CYCLE = 10;
-void setTimer0(int duration)
+void setTimer0(int duration, int index)
 {
-	timer0_counter = duration / TIMER_CYCLE;
-	timer0_flag = 0;
+	timer0_counter[index] = duration / TIMER_CYCLE;
+	timer0_flag[index] = 0;
 }
 void timer_run()
 {
-	if(timer0_counter > 0)
-	{
-		timer0_counter--;
-		if(timer0_counter == 0)
-		{
-			timer0_flag = 1;
+	for(int i = 0;i < 2; i++){
+			if( timer0_counter[i] > 0){
+				timer0_counter[i] --;
+			if( timer0_counter[i] == 0) timer0_flag[i] = 1;
+			}
 		}
-	}
 }
 /**
   * @brief  The application entry point.
@@ -256,17 +254,23 @@ int main(void)
   int hour = 15;
   int minute = 5;
   int second = 60;
-  setTimer0(1000);
+  setTimer0 (1000, 0);
+  setTimer0 (250, 1);
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(timer0_flag == 1)
-	  {
-		  second++;
-		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-		  setTimer0(1000);
-
-	  }
+	  if(timer0_flag[0] == 1){
+	  		  second ++;
+	  		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  		  setTimer0(1000, 0);
+	  	  }
+	  	  if(timer0_flag[1] == 1){
+	  		  if (index_led > 3){
+	  			index_led = 0;
+	  		  }
+	  		  update7SEG(index_led++);
+	  		  setTimer0(250, 1);
+	  	  }
 	  if(second >= 60)
 	  {
 		  minute++;
@@ -410,24 +414,11 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 //int status = 0;
-int counter = 50;
+//int counter = 50;
 //int dotcounter = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	timer_run();
-	if(index_led > 3)
-	{
-		index_led = 0;
-	}
-	if(counter > 0)
-	{
-		update7SEG(index_led++);
-		counter--;
-	}
-	if(counter <= 0)
-	{
-		counter = 50;
-	}
 }
 /* USER CODE END 4 */
 
