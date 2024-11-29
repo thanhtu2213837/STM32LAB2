@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "timer.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -321,7 +321,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int status = 1;
-int counter = 500;
+int counter = 50;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(counter > 0)
@@ -336,7 +336,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
 			display7SEG(1);
 			HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 0);
-			counter = 500;
+			counter = 50;
 			status = 2;
 			break;
 		case 2:
@@ -346,7 +346,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
 			display7SEG(2);
 			HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 1);
-			counter = 500;
+			counter = 50;
 			status = 3;
 			break;
 		case 3:
@@ -356,7 +356,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
 			display7SEG(3);
 			HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 1);
-			counter = 500;
+			counter = 50;
 			status = 4;
 			break;
 		case 4:
@@ -366,7 +366,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 0);
 			display7SEG(0);
 			HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, 0);
-			counter = 500;
+			counter = 50;
 			status = 1;
 			break;
 		default:
